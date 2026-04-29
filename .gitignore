@@ -5,4 +5,8 @@
 *.coverage
 *.coveragexml
 main
+LittleWeatherApp
+LittleWeatherApp_debug
 compile_commands.json
+
+build
