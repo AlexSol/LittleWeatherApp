@@ -10,8 +10,7 @@ Parser::Parser() {
   dataPrediction.resize(NUMBER_POINTS);
 };
 
-void Parser::Parse(std::string &rowData, const City cities[],
-                   int itemCityActive) {
+void Parser::Parse(std::string &rowData, const City& aCity) {
 
   nlohmann::json data = nlohmann::json::parse(rowData);
 
@@ -21,7 +20,7 @@ void Parser::Parse(std::string &rowData, const City cities[],
   timeCity = timeNow + offset;
 
   // Data Hero Card
-  dataHero["city"] = cities[itemCityActive].name + " City";
+  dataHero["city"] = aCity.name + " City";
   float temp = data["hourly"]["temperature_2m"][hourlyIdx];
   dataHero["temp"] = std::to_string((int)std::round(temp));
 

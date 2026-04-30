@@ -11,11 +11,11 @@ namespace Weather {
 class Parser {
 public:
   Parser();
-  void Parse(std::string &rowData, const City cities[], int itemCityActive);
-  const std::map<std::string, std::string> &GetDataHero() const;
-  const std::time_t &GetTimeCity() const;
-  const std::vector<std::map<std::string, std::string>> &GetDataHourly() const;
-  const std::vector<std::map<std::string, std::string>> &GetDataPrediction() const;
+  void Parse(std::string& aRowData, const City& aCity);
+  const std::map<std::string, std::string>& GetDataHero() const;
+  const std::time_t& GetTimeCity() const;
+  const std::vector<std::map<std::string, std::string>>& GetDataHourly() const;
+  const std::vector<std::map<std::string, std::string>>& GetDataPrediction() const;
 
 private:
   std::time_t timeNow;

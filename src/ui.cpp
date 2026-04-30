@@ -105,7 +105,7 @@ void UI::WeatherHourlyCard(
   float inc = 4.0f;
   PositionCelsius pc = {55.0f, 80.0f, 100.0f, 530.0f};
 
-  for (const auto item : data) {
+  for (const auto& item : data) {
     DrawTextEx(fonts.at("regular"), item.at("time").c_str(),
                (Vector2){posX * step, 490.0f}, fontSize.s, 2,
                GetColor(palette.light));
@@ -124,7 +124,7 @@ void UI::WeatherPredictionsCard(
     const std::vector<std::map<std::string, std::string>> &data) {
   float step = 1.0f;
   float inc = 4.0f;
-  for (const auto item : data) {
+  for (const auto& item : data) {
     int idx = 0;
     std::string pic = item.at("pic");
     for (int i = 0; i < ATLAS_ATLAS_SPRITE_COUNT; ++i) {

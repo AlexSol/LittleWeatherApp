@@ -4,8 +4,7 @@
 #include "wallpaper.h"
 #define RAYGUI_IMPLEMENTATION
 #include "ui.h"
-#include "httplib.h"
-#include "client.h"
+#include "providers/providers.h"
 #include "parser.h"
 //---
 // clang-format on
@@ -22,12 +21,13 @@ int main(void) {
                  "assets/Roboto_Bold.ttf", "assets/Roboto_Regular.ttf",
                  "assets/Roboto_Big.ttf", "assets/celsius.png");
   int activeItem = ui.GetActiveItemDropdownMenu();
-  Weather::Client client(Weather::HOST);
-  std::map<std::string, std::string> response =
-      client.Request(Weather::REQUEST_PATH, Weather::CITIES, activeItem);
+
+  const std::unique_ptr<Weather::IProvider> providerWeather = Weather::CreateProviderOpenMeteo(Weather::Const::HostOpenMeteo);
+  Weather::GeoPoint cityLocation = Weather::CITIES[activeItem].location;
+
+  std::map<std::string, std::string> response = providerWeather->getWeather(cityLocation);
   Weather::Parser parser;
-  parser.Parse(response.at("body"), Weather::CITIES,
-               ui.GetActiveItemDropdownMenu());
+  parser.Parse(response.at("body"), Weather::CITIES[activeItem]);
 
   while (!WindowShouldClose()) {
     BeginDrawing();
@@ -35,23 +35,25 @@ int main(void) {
     wallpaper.Draw();
     //--- GUI
     ui.DropdownMenu(Weather::Window::WIDTH);
+    
     if (activeItem != ui.GetActiveItemDropdownMenu()) {
       activeItem = ui.GetActiveItemDropdownMenu();
-      response =
-          client.Request(Weather::REQUEST_PATH, Weather::CITIES, activeItem);
-      parser.Parse(response.at("body"), Weather::CITIES,
-                   ui.GetActiveItemDropdownMenu());
+      const Weather::City& city = Weather::CITIES[ui.GetActiveItemDropdownMenu()]; 
+      response = providerWeather->getWeather(city.location);
+      parser.Parse(response.at("body"), city);
     }
+    
     ui.ShowDayOfWeek(parser.GetTimeCity());
     ui.WeatherHeroCard(parser.GetDataHero());
     ui.WeatherHourlyCard(parser.GetDataHourly());
     ui.WeatherPredictionsCard(parser.GetDataPrediction());
     ui.ButtonRefresh(Weather::Window::WIDTH, Weather::Window::HEIGHT);
+
     if (ui.isRefresh) {
-      response = client.Request(Weather::REQUEST_PATH, Weather::CITIES,
-                                ui.GetActiveItemDropdownMenu());
-      parser.Parse(response.at("body"), Weather::CITIES,
-                   ui.GetActiveItemDropdownMenu());
+      activeItem = ui.GetActiveItemDropdownMenu();
+      const Weather::City& city = Weather::CITIES[activeItem];
+      response = providerWeather->getWeather(city.location);
+      parser.Parse(response.at("body"), city);
       ui.isRefresh = false;
     }
     //---
