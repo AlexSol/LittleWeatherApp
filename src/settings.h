@@ -24,11 +24,15 @@ struct Palette {
 
 extern const Palette palette;
 
+struct GeoPoint {
+  double latitude;
+  double longitude;
+};
+
 struct City {
   unsigned short id;
   std::string name;
-  double latitude;
-  double longitude;
+  GeoPoint location;
 };
 
 enum Cities { KHARKOV, KYIV, MIAMI };
@@ -37,6 +41,8 @@ enum Prediction { CLOUD, VISIBILITY, HUMIDITY, WINDY };
 
 extern const City CITIES[];
 
-extern const char *HOST;
-extern const std::map<Token, std::string> REQUEST_PATH;
+namespace Const {
+  inline static constexpr std::string_view HostOpenMeteo{"api.open-meteo.com"};
+}
+
 } // namespace Weather

@@ -23,32 +23,22 @@ const Palette palette = {
 const City kharkiv = {
     0,
     "Kharkiv",
-    49.9808,
-    36.2527,
+    {49.9808,36.2527},
 };
 
 const City kyiv = {
     1,
     "Kyiv",
-    50.4547,
-    30.5238,
+    {50.4547,30.5238},
 };
 
 const City miami = {
     2,
     "Miami",
-    25.75048,
-    -80.20894,
+    {25.75048,-80.20894},
 };
 
 const City CITIES[NUMBER_CITIES] = {kharkiv, kyiv, miami};
 
-const char *HOST = "api.open-meteo.com";
-const std::map<Token, std::string> REQUEST_PATH = {
-    {PART_ONE, "/v1/forecast?latitude="},
-    {PART_TWO, "&longitude="},
-    {PART_THREE,
-     "&hourly=temperature_2m,rain,cloud_cover,snowfall,weather_code,"
-     "precipitation,wind_speed_10m,wind_direction_10m,"
-     "relativehumidity_2m,visibility,is_day&timezone=auto&forecast_days=1&format=json"}};
+// const char *HOST = "api.open-meteo.com";
 } // namespace Weather

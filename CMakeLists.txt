@@ -8,14 +8,33 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 include(CheckCXXCompilerFlag)
 
+
+# ------ Sanitizers ----
+add_library(sanitizers INTERFACE)
+target_compile_options(sanitizers INTERFACE
+  $<$<AND:$<PLATFORM_ID:Linux>,$<CONFIG:Debug>,$<OR:$<CXX_COMPILER_ID:GNU>,$<CXX_COMPILER_ID:Clang>>>:
+    -fsanitize=address,undefined -fno-omit-frame-pointer -fno-sanitize=vptr>
+)
+
+target_link_options(sanitizers INTERFACE
+  $<$<AND:$<PLATFORM_ID:Linux>,$<CONFIG:Debug>,$<OR:$<CXX_COMPILER_ID:GNU>,$<CXX_COMPILER_ID:Clang>>>:
+    -fsanitize=address,undefined>
+)
+
 add_executable(${PROJECT_NAME}
     src/atlas.h
-    src/client.cpp
+    src/providers/providerOpenMeteo.cpp
+    src/providers/providers.cpp
     src/main.cpp
     src/parser.cpp
     src/settings.cpp
     src/ui.cpp
     src/wallpaper.cpp
+)
+
+target_compile_options(${PROJECT_NAME} PRIVATE
+  $<$<AND:$<PLATFORM_ID:Linux>,$<CONFIG:Debug>,$<OR:$<CXX_COMPILER_ID:GNU>,$<CXX_COMPILER_ID:Clang>>>:
+    -g -O0>
 )
 
 target_include_directories(${PROJECT_NAME}
@@ -25,6 +44,7 @@ target_include_directories(${PROJECT_NAME}
 
 target_link_libraries(${PROJECT_NAME}
     PRIVATE
+        sanitizers
         -lraylib
         -lGL
         -lm
